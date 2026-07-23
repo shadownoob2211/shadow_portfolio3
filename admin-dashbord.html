@@ -3,437 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>داشبورد مدیر - Shadow</title>
+    <title>لاگین مدیر - Shadow</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <header>
-        <nav class="navbar">
-            <a href="index.html" class="logo">Shadow</a>
-            <button class="hamburger" id="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="#" onclick="switchTab('projects'); return false;">📊 پروژه‌ها</a></li>
-                <li><a href="#" onclick="switchTab('skills'); return false;">⭐ مهارت‌ها</a></li>
-                <li><a href="#" onclick="switchTab('about'); return false;">👤 درباره من</a></li>
-                <li><a href="#" onclick="switchTab('contact'); return false;">📞 تماس</a></li>
-                <li><a href="#" onclick="switchTab('settings'); return false;" class="admin-link">⚙️ تنظیمات</a></li>
-                <li><a href="#" onclick="logout(); return false;" class="admin-link danger">🚪 خروج</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <section class="admin-dashboard">
-        <h1>📊 داشبورد مدیر</h1>
-
-        <!-- ============ تب پروژه‌ها ============ -->
-        <div id="projects-tab" class="tab-content">
-            <h2>📊 مدیریت پروژه‌ها</h2>
-            <button class="btn-primary" onclick="showProjectForm()">+ 📝 پروژه جدید</button>
-            
-            <form id="projectForm" class="admin-form" style="display:none;">
-                <h3>افزودن پروژه جدید</h3>
-                <input type="text" id="projectName" placeholder="🎯 نام پروژه" required>
-                <textarea id="projectDesc" placeholder="📄 توضیح پروژه (مثال: بررسی امنیتی)" required></textarea>
-                <input type="date" id="projectDate" required>
-                <input type="url" id="projectLink" placeholder="🔗 لینک پروژه (https://...)" required>
-                <textarea id="projectWorks" placeholder="✅ کارهای انجام شده (هر خط یک کار)" required></textarea>
-                <div class="form-actions">
-                    <button type="submit" class="btn-success">✅ ذخیره</button>
-                    <button type="button" class="btn-secondary" onclick="hideProjectForm()">❌ لغو</button>
-                </div>
-            </form>
-
-            <div id="projectsList" class="admin-list"></div>
-        </div>
-
-        <!-- ============ تب مهارت‌ها ============ -->
-        <div id="skills-tab" class="tab-content" style="display:none;">
-            <h2>⭐ مدیریت مهارت‌ها</h2>
-            <button class="btn-primary" onclick="showSkillForm()">+ 📝 دسته مهارت جدید</button>
-            
-            <form id="skillForm" class="admin-form" style="display:none;">
-                <h3>افزودن دسته مهارت</h3>
-                <input type="text" id="skillCategory" placeholder="📂 نام دسته (مثال: 🔒 Security)" required>
-                <textarea id="skillItems" placeholder="📋 مهارت‌ها (هر خط یک مهارت):&#10;Penetration Testing&#10;Vulnerability Assessment&#10;Web App Security" required></textarea>
-                <div class="form-actions">
-                    <button type="submit" class="btn-success">✅ ذخیره</button>
-                    <button type="button" class="btn-secondary" onclick="hideSkillForm()">❌ لغو</button>
-                </div>
-            </form>
-
-            <div id="skillsList" class="admin-list"></div>
-        </div>
-
-        <!-- ============ تب درباره من ============ -->
-        <div id="about-tab" class="tab-content" style="display:none;">
-            <h2>👤 ویرایش درباره من</h2>
-            <form id="aboutForm" class="admin-form">
-                <textarea id="aboutText" placeholder="درباره خودت بنویس..." required style="min-height: 200px;"></textarea>
-                <button type="submit" class="btn-success">✅ ذخیره</button>
-            </form>
-        </div><!-- ============ تب تماس ============ -->
-        <div id="contact-tab" class="tab-content" style="display:none;">
-            <h2>📞 ویرایش اطلاعات تماس</h2>
-            <form id="contactForm" class="admin-form">
-                <input type="email" id="contactEmail" placeholder="📧 ایمیل" required>
-                <input type="tel" id="contactPhone" placeholder="📞 تلفن" required>
-                <input type="url" id="contactTwitter" placeholder="𝕏 توییتر (https://...)">
-                <input type="url" id="contactLinkedin" placeholder="💼 لینکدین (https://...)">
-                <input type="url" id="contactGithub" placeholder="🐙 گیت‌هاب (https://...)">
-                <button type="submit" class="btn-success">✅ ذخیره</button>
-            </form>
-        </div>
-
-        <!-- ============ تب تنظیمات ============ -->
-        <div id="settings-tab" class="tab-content" style="display:none;">
-            <h2>⚙️ تنظیمات امنیتی</h2>
-            <form id="settingsForm" class="admin-form">
-                <h3>تغییر نام کاربری و پسورد</h3>
-                <input type="text" id="newUsername" placeholder="🔑 نام کاربری جدید" required>
-                <input type="password" id="newPassword" placeholder="🔐 پسورد جدید" required>
-                <p style="color: #888; font-size: 0.9rem; margin: 1rem 0;">
-                    ⚠️ بعد از ذخیره، باید دوباره وارد شوی با نام کاربری و پسورد جدید
-                </p>
-                <button type="submit" class="btn-success">✅ به‌روزرسانی</button>
-            </form>
-        </div>
-    </section>
-
-    <footer>
-        <p>&copy; 2024 Shadow. All rights reserved.</p>
-    </footer>
+<body class="login-page">
+    <div class="login-container">
+        <h1>🔐 لاگین مدیر</h1>
+        <div class="error" id="error"></div>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="نام کاربری" required>
+            <input type="password" id="password" placeholder="پسورد" required>
+            <button type="submit">ورود</button>
+        </form>
+        <p class="info">نام کاربری: <strong>admin</strong> | پسورد: <strong>12345</strong></p>
+    </div>
 
     <script>
-        // ========== متغیرهای سراسری ==========
-        let currentUser = null;
+        // تعریف credentials
+        const DEFAULT_CREDENTIALS = {
+            username: 'admin',
+            password: '12345'
+        };
 
-        // ========== بررسی ورود ==========
-        function checkAuth() {
-            console.log('🔍 Checking authentication...');
+        // بررسی اگر قبلاً لاگین شده
+        window.addEventListener('load', function() {
+            console.log('🔍 Checking localStorage...');
+            const user = localStorage.getItem('currentUser');
+            console.log('currentUser:', user);
             
-            try {
-                const userJson = localStorage.getItem('currentUser');
-                console.log('currentUser JSON:', userJson);
-                
-                if (!userJson) {
-                    console.log('❌ No currentUser found');
-                    window.location.href = 'login.html';
-                    return false;
-                }
-
-                const user = JSON.parse(userJson);
-                console.log('✅ User found:', user);
-
-                if (!user || !user.loggedIn) {
-                    console.log('❌ User not logged in');
-                    window.location.href = 'login.html';
-                    return false;
-                }
-
-                console.log('✅ User is authenticated:', user.username);
-                currentUser = user;
-                return true;
-            } catch (e) {
-                console.error('❌ Error checking auth:', e);
-                window.location.href = 'login.html';
-                return false;
-            }
-        }
-
-        // ========== منو هامبرگری ==========
-        function initMenu() {
-            const hamburger = document.getElementById('hamburger');
-            const navLinks = document.getElementById('navLinks');
-
-            if (hamburger && navLinks) {
-                hamburger.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    hamburger.classList.toggle('active');
-                    navLinks.classList.toggle('active');
-                });
-
-                document.querySelectorAll('.nav-links a').forEach(link => {
-                    link.addEventListener('click', () => {
-                        hamburger.classList.remove('active');
-                        navLinks.classList.remove('active');
-                    });
-                });
-
-                document.addEventListener('click', (e) => {
-                    if (!e.target.closest('.navbar')) {
-                        hamburger.classList.remove('active');
-                        navLinks.classList.remove('active');
+            if (user) {
+                try {
+                    const userData = JSON.parse(user);
+                    if (userData && userData.loggedIn) {
+                        console.log('✅ User already logged in, redirecting...');
+                        setTimeout(() => {
+                            window.location.href = 'admin-dashboard.html';
+                        }, 500);
                     }
-                });
-            }
-        }// ========== خروج ==========
-        function logout() {
-            if (confirm('آیا مطمئن هستی که می‌خوای خروج کنی؟')) {
-                console.log('🚪 Logging out...');
-                localStorage.removeItem('currentUser');
-                window.location.href = 'login.html';
-            }
-        }
-
-        // ========== سوئیچ تب ==========
-        function switchTab(tab) {
-            console.log('📑 Switching to tab:', tab);
-            document.querySelectorAll('.tab-content').forEach(t => {
-                t.style.display = 'none';
-            });
-
-            const element = document.getElementById(tab + '-tab');
-            if (element) {
-                element.style.display = 'block';
-                element.scrollIntoView({ behavior: 'smooth' });
-                
-                if (tab === 'projects') loadProjects();
-                if (tab === 'skills') loadSkills();
-                if (tab === 'about') loadAbout();
-                if (tab === 'contact') loadContact();
-            }
-        }
-
-        // ========== پروژه‌ها ==========
-        function showProjectForm() {
-            document.getElementById('projectForm').style.display = 'block';
-            document.getElementById('projectForm').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function hideProjectForm() {
-            document.getElementById('projectForm').style.display = 'none';
-        }
-
-        function loadProjects() {
-            try {
-                const projects = JSON.parse(localStorage.getItem('projects')) || [];
-                const container = document.getElementById('projectsList');
-                
-                console.log('📊 Loading projects:', projects);
-                
-                if (projects.length === 0) {
-                    container.innerHTML = '<p style="text-align: center; color: #888; padding: 2rem;">هنوز پروژه‌ای ثبت نشده است</p>';
-                    return;
-                }
-
-                container.innerHTML = projects.map(p => 
-                    <div class="admin-item">
-                        <div style="flex: 1;">
-                            <h3 style="color: var(--primary); margin-bottom: 0.5rem;">${p.name}</h3>
-                            <p style="color: var(--text-light); margin-bottom: 0.5rem;">${p.description}</p>
-                            <p style="font-size: 0.9rem; color: #888;">
-                                📅 ${new Date(p.date).toLocaleDateString('fa-IR')} | 🔗 ${p.link}
-                            </p>
-                            <p style="font-size: 0.85rem; color: #999; margin-top: 0.5rem;">
-                                <strong>کارهای انجام شده:</strong> ${p.works.join(', ')}
-                            </p>
-                        </div>
-                        <div class="admin-item-actions">
-                            <button class="btn-delete" onclick="deleteProject(${p.id})">❌ حذف</button>
-                        </div>
-                    </div>
-                ).join('');
-            } catch (e) {
-                console.error('❌ Error loading projects:', e);
-            }
-        }
-
-        function deleteProject(id) {
-            if (confirm('آیا مطمئن هستی که می‌خوای این پروژه رو حذف کنی؟')) {
-                try {
-                    let projects = JSON.parse(localStorage.getItem('projects')) || [];
-                    projects = projects.filter(p => p.id !== id);
-                    localStorage.setItem('projects', JSON.stringify(projects));
-                    console.log('❌ Project deleted:', id);
-                    loadProjects();
-                    alert('✅ پروژه حذف شد');
                 } catch (e) {
-                    console.error('❌ Error deleting project:', e);
-                    alert('❌ خطا در حذف پروژه');
+                    console.log('❌ Error parsing user:', e);
                 }
             }
-        }
+        });
 
-        // ========== مهارت‌ها ==========
-        function showSkillForm() {
-            document.getElementById('skillForm').style.display = 'block';
-            document.getElementById('skillForm').scrollIntoView({ behavior: 'smooth' });
-        }function hideSkillForm() {
-            document.getElementById('skillForm').style.display = 'none';
-        }
+        // هندل کردن لاگین
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
 
-        function loadSkills() {
-            try {
-                const skills = JSON.parse(localStorage.getItem('skills')) || [];
-                const container = document.getElementById('skillsList');
-                
-                console.log('⭐ Loading skills:', skills);
-                
-                if (skills.length === 0) {
-                    container.innerHTML = '<p style="text-align: center; color: #888; padding: 2rem;">هنوز مهارتی ثبت نشده است</p>';
-                    return;
-                }
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('error');
 
-                container.innerHTML = skills.map((s, idx) => 
-                    <div class="admin-item">
-                        <div style="flex: 1;">
-                            <h3 style="color: var(--primary); margin-bottom: 0.5rem;">${s.category}</h3>
-                            <p style="color: var(--text-light);">${s.items.join(' • ')}</p>
-                        </div>
-                        <div class="admin-item-actions">
-                            <button class="btn-delete" onclick="deleteSkill(${idx})">❌ حذف</button>
-                        </div>
-                    </div>
-                ).join('');
-            } catch (e) {
-                console.error('❌ Error loading skills:', e);
-            }
-        }
+            console.log('📝 Login attempt:', { username, password });
 
-        function deleteSkill(idx) {
-            if (confirm('آیا مطمئن هستی که می‌خوای این دسته مهارت رو حذف کنی؟')) {
+            // بررسی credentials
+            const storedCredentials = localStorage.getItem('credentials');
+            let credentials = DEFAULT_CREDENTIALS;
+
+            if (storedCredentials) {
                 try {
-                    let skills = JSON.parse(localStorage.getItem('skills')) || [];
-                    skills.splice(idx, 1);
-                    localStorage.setItem('skills', JSON.stringify(skills));
-                    console.log('❌ Skill deleted at index:', idx);
-                    loadSkills();
-                    alert('✅ مهارت حذف شد');
+                    credentials = JSON.parse(storedCredentials);
+                    console.log('📦 Credentials from storage:', credentials);
                 } catch (e) {
-                    console.error('❌ Error deleting skill:', e);
-                    alert('❌ خطا در حذف مهارت');
+                    console.log('⚠️ Error parsing credentials, using default');
+                    credentials = DEFAULT_CREDENTIALS;
                 }
+            } else {
+                console.log('📦 Using default credentials');
+                // اولین بار - ذخیره کن credentials پیش‌فرض
+                localStorage.setItem('credentials', JSON.stringify(DEFAULT_CREDENTIALS));
             }
-        }
 
-        // ========== درباره من ==========
-        function loadAbout() {
-            try {
-                const about = localStorage.getItem('about') || 'سلام، من Shadow هستم. یک Security Researcher و Bug Bounty Hunter با تجربه در شناسایی آسیب‌پذیری‌ها.';
-                document.getElementById('aboutText').value = about;
-                console.log('👤 About loaded');
-            } catch (e) {
-                console.error('❌ Error loading about:', e);
-            }
-        }
-
-        // ========== تماس ==========
-        function loadContact() {
-            try {
-                const contact = JSON.parse(localStorage.getItem('contact')) || {
-                    email: 'shadow@example.com',
-                    phone: '+98 901 234 5678',
-                    twitter: '',
-                    linkedin: '',
-                    github: ''
+            // بررسی صحیح بودن
+            if (username === credentials.username && password === credentials.password) {
+                console.log('✅ Login successful!');
+                
+                const userData = {
+                    username: username,
+                    loggedIn: true,
+                    timestamp: new Date().getTime()
                 };
+
+                try {
+                    localStorage.setItem('currentUser', JSON.stringify(userData));
+                    console.log('✅ User data saved to localStorage');
+                    
+                    // توقف کوتاه برای اطمینان از ذخیره‌سازی
+                    setTimeout(() => {
+                        console.log('🔄 Redirecting to dashboard...');
+                        window.location.href = 'admin-dashboard.html';
+                    }, 300);
+                } catch (e) {console.error('❌ Error saving to localStorage:', e);
+                    alert('❌ خطا در ذخیره‌سازی. لطفا دوباره تلاش کن.');
+                }
+            } else {
+                console.log('❌ Login failed: incorrect credentials');
+                errorDiv.classList.add('show');
+                errorDiv.textContent = '❌ نام کاربری یا پسورد اشتباه است!';
                 
-                document.getElementById('contactEmail').value = contact.email || '';
-                document.getElementById('contactPhone').value = contact.phone || '';
-                document.getElementById('contactTwitter').value = contact.twitter || '';
-                document.getElementById('contactLinkedin').value = contact.linkedin || '';
-                document.getElementById('contactGithub').value = contact.github || '';
-                console.log('📞 Contact loaded');
+                setTimeout(() => {
+                    errorDiv.classList.remove('show');
+                }, 3000);
+            }
+        });
+
+        // Test localStorage
+        window.addEventListener('load', function() {
+            try {
+                localStorage.setItem('test', 'test');
+                localStorage.removeItem('test');
+                console.log('✅ localStorage is available');
             } catch (e) {
-                console.error('❌ Error loading contact:', e);
+                console.error('❌ localStorage is not available:', e);
+                alert('⚠️ localStorage is not available. Some features may not work.');
             }
-        }
-
-        // ========== فرم‌ها ==========
-        window.addEventListener('DOMContentLoaded', () => {
-            console.log('🚀 Dashboard DOMContentLoaded');
-            initMenu();
-
-            if (!checkAuth()) {
-                console.log('❌ Authentication failed');
-                return;
-            }
-
-            console.log('✅ Authentication successful, loading dashboard');// فرم پروژه
-            const projectForm = document.getElementById('projectForm');
-            if (projectForm) {
-                projectForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    try {
-                        const project = {
-                            id: Date.now(),
-                            name: document.getElementById('projectName').value.trim(),
-                            description: document.getElementById('projectDesc').value.trim(),
-                            date: document.getElementById('projectDate').value,
-                            link: document.getElementById('projectLink').value.trim(),
-                            works: document.getElementById('projectWorks').value.split('\n').map(w => w.trim()).filter(w => w)
-                        };
-
-                        let projects = JSON.parse(localStorage.getItem('projects')) || [];
-                        projects.push(project);
-                        localStorage.setItem('projects', JSON.stringify(projects));
-                        
-                        console.log('✅ Project added:', project);
-                        loadProjects();
-                        projectForm.reset();
-                        hideProjectForm();
-                        alert('✅ پروژه با موفقیت اضافه شد');
-                    } catch (e) {
-                        console.error('❌ Error adding project:', e);
-                        alert('❌ خطا در اضافه کردن پروژه');
-                    }
-                });
-            }
-
-            // فرم مهارت
-            const skillForm = document.getElementById('skillForm');
-            if (skillForm) {
-                skillForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    try {
-                        const skill = {
-                            category: document.getElementById('skillCategory').value.trim(),
-                            items: document.getElementById('skillItems').value.split('\n').map(i => i.trim()).filter(i => i)
-                        };
-
-                        let skills = JSON.parse(localStorage.getItem('skills')) || [];
-                        skills.push(skill);
-                        localStorage.setItem('skills', JSON.stringify(skills));
-                        
-                        console.log('✅ Skill added:', skill);
-                        loadSkills();
-                        skillForm.reset();
-                        hideSkillForm();
-                        alert('✅ مهارت با موفقیت اضافه شد');
-                    } catch (e) {
-                        console.error('❌ Error adding skill:', e);
-                        alert('❌ خطا در اضافه کردن مهارت');
-                    }
-                });
-            }
-
-            // فرم درباره من
-            const aboutForm = document.getElementById('aboutForm');
-            if (aboutForm) {
-                aboutForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    try {
-                        const about = document.getElementById('aboutText').value.trim();
-                        localStorage.setItem('about', about);
-                        console.log('✅ About updated');
-                        alert('✅ درباره من با موفقیت ذخیره شد');
-                    } catch (e) {
-                        console.error('❌ Error saving about:', e);
-                        alert('❌ خطا در ذخیره درباره من');
-                    }
-                });
-            }
-
-            // فرم تماس
-            const contactForm = document.getElementById('contactForm');
-            if (contactForm) {
-                contactForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    try {
-                        const contact = {
-                            email: document.getElementById('contactEmail').value.trim(),
-                            phone: document.getElementById('contactPhone'
+        });
+    </script>
+</body>
+</html>
