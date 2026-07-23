@@ -58,20 +58,32 @@ function initMenu() {
 }
 
 // ========== لاگین ==========
-function handleLogin(e) {
-    e.preventDefault();
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    const data = loadData();
-    const errorDiv = document.getElementById('error');
+function initMenu() {
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
 
-    if (username === data.credentials.username && password === data.credentials.password) {
-        localStorage.setItem('currentUser', JSON.stringify({ username, loggedIn: true }));
-        window.location.href = 'admin-dashboard.html';
-    } else {
-        errorDiv.classList.add('show');
-        errorDiv.textContent = '❌ نام کاربری یا پسورد اشتباه است!';
-        setTimeout(() => errorDiv.classList.remove('show'), 3000);
+    if (hamburger && navLinks) {
+        hamburger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            hamburger.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+
+        // بستن منو روی کلیک لینک
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // بستن منو روی کلیک بیرون
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.navbar')) {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+            }
+        });
     }
 }
 
@@ -102,9 +114,7 @@ function showProjectForm() {
 
 function hideProjectForm() {
     document.getElementById('projectForm').style.display = 'none';
-}
-
-function handleProjectSubmit(e) {
+}function handleProjectSubmit(e) {
     e.preventDefault();
     const project = {
         id: Date.now(),
