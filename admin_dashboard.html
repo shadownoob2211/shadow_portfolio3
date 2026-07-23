@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد مدیر - Shadow</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a href="index.html" class="logo">Shadow</a>
+            <button class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#" onclick="switchTab('projects')">پروژه‌ها</a></li>
+                <li><a href="#" onclick="switchTab('skills')">مهارت‌ها</a></li>
+                <li><a href="#" onclick="switchTab('about')">درباره من</a></li>
+                <li><a href="#" onclick="switchTab('contact')">تماس</a></li>
+                <li><a href="#" onclick="switchTab('settings')" class="admin-link">⚙️ تنظیمات</a></li>
+                <li><a href="#" onclick="logout()" class="admin-link danger">خروج</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="admin-dashboard">
+        <h1>داشبورد مدیر</h1>
+
+        <!-- تب پروژه‌ها -->
+        <div id="projects-tab" class="tab-content">
+            <h2>مدیریت پروژه‌ها</h2>
+            <button class="btn-primary" onclick="showProjectForm()">+ پروژه جدید</button>
+            
+            <form id="projectForm" class="admin-form" style="display:none;">
+                <input type="text" id="projectName" placeholder="نام پروژه" required>
+                <textarea id="projectDesc" placeholder="توضیح پروژه" required></textarea>
+                <input type="date" id="projectDate" required>
+                <input type="url" id="projectLink" placeholder="لینک پروژه">
+                <textarea id="projectWorks" placeholder="کارهای انجام شده (هر خط یک کار)" required></textarea>
+                <div class="form-actions">
+                    <button type="submit" class="btn-success">ذخیره</button>
+                    <button type="button" class="btn-secondary" onclick="hideProjectForm()">لغو</button>
+                </div>
+            </form>
+
+            <div id="projectsList" class="admin-list"></div>
+        </div>
+
+        <!-- تب مهارت‌ها -->
+        <div id="skills-tab" class="tab-content" style="display:none;">
+            <h2>مدیریت مهارت‌ها</h2>
+            <button class="btn-primary" onclick="showSkillForm()">+ دسته مهارت جدید</button>
+            
+            <form id="skillForm" class="admin-form" style="display:none;">
+                <input type="text" id="skillCategory" placeholder="نام دسته (مثال: Security)">
+                <textarea id="skillItems" placeholder="مهارت‌ها (هر خط یک مهارت)"></textarea>
+                <div class="form-actions">
+                    <button type="submit" class="btn-success">ذخیره</button>
+                    <button type="button" class="btn-secondary" onclick="hideSkillForm()">لغو</button>
+                </div>
+            </form>
+
+            <div id="skillsList" class="admin-list"></div>
+        </div>
+
+        <!-- تب درباره من -->
+        <div id="about-tab" class="tab-content" style="display:none;">
+            <h2>ویرایش درباره من</h2>
+            <form id="aboutForm" class="admin-form">
+                <textarea id="aboutText" placeholder="درباره من" required></textarea>
+                <button type="submit" class="btn-success">ذخیره</button>
+            </form>
+        </div>
+
+        <!-- تب تماس -->
+        <div id="contact-tab" class="tab-content" style="display:none;">
+            <h2>ویرایش اطلاعات تماس</h2>
+            <form id="contactForm" class="admin-form">
+                <input type="email" id="contactEmail" placeholder="ایمیل" required>
+                <input type="tel" id="contactPhone" placeholder="تلفن" required><input type="url" id="contactTwitter" placeholder="توییتر">
+                <input type="url" id="contactLinkedin" placeholder="لینکدین">
+                <input type="url" id="contactGithub" placeholder="گیت‌هاب">
+                <button type="submit" class="btn-success">ذخیره</button>
+            </form>
+        </div>
+
+        <!-- تب تنظیمات -->
+        <div id="settings-tab" class="tab-content" style="display:none;">
+            <h2>تنظیمات امنیتی</h2>
+            <form id="settingsForm" class="admin-form">
+                <input type="text" id="newUsername" placeholder="نام کاربری جدید" required>
+                <input type="password" id="newPassword" placeholder="پسورد جدید" required>
+                <button type="submit" class="btn-success">به‌روزرسانی</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Shadow. All rights reserved.</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
