@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لاگین مدیر - Shadow</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <h1>🔐 لاگین مدیر</h1>
+        <div class="error" id="error"></div>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="نام کاربری" required>
+            <input type="password" id="password" placeholder="پسورد" required>
+            <button type="submit">ورود</button>
+        </form>
+        <p class="info">نام کاربری: <strong>admin</strong> | پسورد: <strong>12345</strong></p>
+    </div>
+
+    <script>
+        // تعریف credentials
+        const DEFAULT_CREDENTIALS = {
+            username: 'admin',
+            password: '12345'
+        };
+
+        // بررسی اگر قبلاً لاگین شده
+        window.addEventListener('load', function() {
+            console.log('🔍 Checking localStorage...');
+            const user = localStorage.getItem('currentUser');
+            console.log('currentUser:', user);
+            
+            if (user) {
+                try {
+                    const userData = JSON.parse(user);
+                    if (userData && userData.loggedIn) {
+                        console.log('✅ User already logged in, redirecting...');
+                        setTimeout(() => {
+                            window.location.href = 'admin-dashboard.html';
+                        }, 500);
+                    }
+                } catch (e) {
+                    console.log('❌ Error parsing user:', e);
+                }
+            }
+        });
+
+        // هندل کردن لاگین
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('error');
+
+            console.log('📝 Login attempt:', { username, password });
+
+            // بررسی credentials
+            const storedCredentials = localStorage.getItem('credentials');
+            let credentials = DEFAULT_CREDENTIALS;
+
+            if (storedCredentials) {
+                try {
+                    credentials = JSON.parse(storedCredentials);
+                    console.log('📦 Credentials from storage:', credentials);
+                } catch (e) {
+                    console.log('⚠️ Error parsing credentials, using default');
+                    credentials = DEFAULT_CREDENTIALS;
+                }
+            } else {
+                console.log('📦 Using default credentials');
+                // اولین بار - ذخیره کن credentials پیش‌فرض
+                localStorage.setItem('credentials', JSON.stringify(DEFAULT_CREDENTIALS));
+            }
+
+            // بررسی صحیح بودن
+            if (username === credentials.username && password === credentials.password) {
+                console.log('✅ Login successful!');
+                
+                const userData = {
+                    username: username,
+                    loggedIn: true,
+                    timestamp: new Date().getTime()
+                };
+
+                try {
+                    localStorage.setItem('currentUser', JSON.stringify(userData));
+                    console.log('✅ User data saved to localStorage');
+                    
+                    // توقف کوتاه برای اطمینان از ذخیره‌سازی
+                    setTimeout(() => {
+                        console.log('🔄 Redirecting to dashboard...');
+                        window.location.href = 'admin-dashboard.html';
+                    }, 300);
+                } catch (e) {console.error('❌ Error saving to localStorage:', e);
+                    alert('❌ خطا در ذخیره‌سازی. لطفا دوباره تلاش کن.');
+                }
+            } else {
+                console.log('❌ Login failed: incorrect credentials');
+                errorDiv.classList.add('show');
+                errorDiv.textContent = '❌ نام کاربری یا پسورد اشتباه است!';
+                
+                setTimeout(() => {
+                    errorDiv.classList.remove('show');
+                }, 3000);
+            }
+        });
+
+        // Test localStorage
+        window.addEventListener('load', function() {
+            try {
+                localStorage.setItem('test', 'test');
+                localStorage.removeItem('test');
+                console.log('✅ localStorage is available');
+            } catch (e) {
+                console.error('❌ localStorage is not available:', e);
+                alert('⚠️ localStorage is not available. Some features may not work.');
+            }
+        });
+    </script>
+</body>
+</html>
