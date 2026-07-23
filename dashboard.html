@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>داشبورد - Shadow</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* چند استایل کوچک اضافه برای نمایش بهتر در صورت نبود style.css */
+    body { font-family: sans-serif; background:#0f1115; color:#e6eef8; margin:0; padding:0; }
+    header { background:#0b0c0f; padding:1rem 1.5rem; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #1b1d22; }
+    header h1 { margin:0; font-size:1.1rem; }
+    header .actions button { margin-left:.5rem; padding:.4rem .7rem; border-radius:6px; border:none; cursor:pointer; background:#2f89ff; color:#fff; }
+    .container { padding:1rem; max-width:1100px; margin:1rem auto; }
+    .grid { display:grid; grid-template-columns: 1fr 360px; gap:1rem; }
+    .card { background:#0b0c0f; padding:1rem; border-radius:8px; border:1px solid #1b1d22; box-shadow:0 6px 18px rgba(0,0,0,.6); }
+    .list-item { display:flex; justify-content:space-between; gap:.5rem; padding:.6rem 0; border-bottom:1px dashed #16202b; }
+    input, textarea { width:100%; padding:.5rem; margin:.4rem 0; background:#0b0c0f; color:#e6eef8; border:1px solid #222; border-radius:6px; }
+    button.primary { background:#2f89ff; color:#fff; border:none; padding:.5rem .7rem; border-radius:6px; cursor:pointer; }
+    .small { font-size:.85rem; color:#9aa7bf; }
+    .flex { display:flex; gap:.5rem; align-items:center; }
+    .muted { color:#9aa7bf; font-size:.9rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>داشبورد مدیریت — Shadow</h1>
+    <div class="actions">
+      <span class="muted" id="userBadge">—</span>
+      <button id="logoutBtn">خروج</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="grid">
+      <section class="card" id="mainArea">
+        <h2>پروژه‌ها</h2>
+
+        <div id="projectsList" class="muted small">بارگذاری...</div>
+
+        <hr style="margin:1rem 0;border:none;border-top:1px solid #1b1d22">
+
+        <h3>اضافه کردن / ویرایش پروژه</h3>
+        <form id="projectForm">
+          <input id="projTitle" placeholder="عنوان پروژه" required />
+          <input id="projLink" placeholder="لینک (مثال: https://... )" />
+          <textarea id="projDesc" rows="4" placeholder="توضیحات"></textarea>
+          <input type="hidden" id="projId" value="" />
+          <div style="display:flex;gap:.5rem">
+            <button type="submit" class="primary">ذخیره</button>
+            <button type="button" id="projCancel">انصراف</button>
+          </div>
+        </form>
+      </section>
+
+      <aside class="card">
+        <h3>مهارت‌ها</h3>
+        <div id="skillsList" class="muted small">بارگذاری...</div>
+        <form id="skillForm" style="margin-top:.6rem">
+          <input id="skillInput" placeholder="مهارت جدید" />
+          <button type="submit" class="primary" style="width:100%; margin-top:.5rem">افزودن مهارت</button>
+        </form>
+
+        <hr style="margin:1rem 0;border:none;border-top:1px solid #1b1d22">
+
+        <h3>اطلاعات تماس</h3>
+        <div id="contactArea" class="muted small">بارگذاری...</div>
+        <form id="contactForm" style="margin-top:.6rem">
+          <input id="contactEmail" placeholder="ایمیل" />
+          <input id="contactPhone" placeholder="تلفن" />
+          <button type="submit" class="primary" style="width:100%; margin-top:.5rem">ذخیره تماس</button>
+        </form>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    // ---------- auth ---------
+    function log() { try { console.log.apply(console, arguments); } catch(e) {} }
+
+    function getOrigin() {
+      return window.location.origin || (window.location.protocol + '//' + window.location.host);
+    }
+
+    function checkAuth() {
+      log('🔍 checkAuth start');try {
+        const userJson = localStorage.getItem('currentUser');
+        log('currentUser raw:', userJson);
+        if (!userJson) {
+          log('❌ currentUser not found -> redirect to login');
+          window.location.href = getOrigin() + '/login.html';
+          return false;
+        }
+        let user = null;
+        try { user = JSON.parse(userJson); } catch(e) { log('❌ currentUser JSON parse failed', e); }
+        if (!user || !user.loggedIn) {
+          log('❌ user not loggedIn -> redirect to login', user);
+          window.location.href = getOrigin() + '/login.html';
+          return false;
+        }
+        // ok
+        log('✅ Auth OK', user);
+        document.getElementById('userBadge').textContent = user.username || 'مدیر';
+        return true;
+      } catch (e) {
+        log('❌ checkAuth error', e);
+        try { window.location.href = getOrigin() + '/login.html'; } catch(_){}
+        return false;
+      }
+    }
+
+    // فوراً بررسی می‌کنیم (قبل از بارگذاری بقیه)
+    if (!checkAuth()) {
+      // checkAuth خودش redirect می‌کند
+    }
+
+    // ---------- storage helpers ----------
+    function safeGet(key, fallback) {
+      try {
+        const v = localStorage.getItem(key);
+        return v ? JSON.parse(v) : fallback;
+      } catch (e) {
+        log('❌ safeGet parse error for', key, e);
+        return fallback;
+      }
+    }
+    function safeSet(key, value) {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch (e) {
+        log('❌ safeSet error', key, e);
+      }
+    }
+
+    // ---------- logout ----------
+    document.getElementById('logoutBtn').addEventListener('click', function(){
+      try {
+        localStorage.removeItem('currentUser');
+        log('🔒 logged out, redirect to login');
+        window.location.href = getOrigin() + '/login.html';
+      } catch (e) {
+        log('❌ logout error', e);
+      }
+    });
+
+    // ---------- Projects CRUD ----------
+    function renderProjects() {
+      const listEl = document.getElementById('projectsList');
+      const projects = safeGet('projects', []);
+      if (!projects.length) {
+        listEl.innerHTML = '<div class="small muted">هیچ پروژه‌ای ثبت نشده.</div>';
+        return;
+      }
+      const html = projects.map(p => {
+        return 
+          <div class="list-item">
+            <div style="flex:1;">
+              <div style="font-weight:600">${escapeHtml(p.title)}</div>
+              <div class="small">${escapeHtml(p.description || '')}</div>
+              ${p.link ? <div class="small"><a href="${escapeAttr(p.link)}" target="_blank" rel="noopener" style="color:#7fb0ff">${escapeHtml(p.link)}</a></div> : ''}
+            </div>
+            <div style="min-width:110px;display:flex;flex-direction:column;gap:.3rem">
+              <button onclick="editProject('${p.id}')" class="small">ویرایش</button>
+              <button onclick="deleteProject('${p.id}')" class="small" style="color:#ff7b7b">حذف</button>
+            </div>
+          </div>
+        ;
+      }).join('');
+      listEl.innerHTML = html;
+    }
+
+    function saveProjectObj(obj) {
+      const projects = safeGet('projects', []);
+      const idx = projects.findIndex(p => p.id === obj.id);
+      if (idx >= 0) projects[idx] = obj;
+      else projects.unshift(obj);
+      safeSet('projects', projects);
+      renderProjects();
+    }
+
+    function generateId() {
+      return 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
+    }
+
+    document.getElementById('projectForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      try {
+        const id = document.getElementById('projId').value || generateId();
+        const title = document.getElementById('projTitle').value.trim();
+        const link = document.getElementById('projLink').value.trim();const desc = document.getElementById('projDesc').value.trim();
+        if (!title) { alert('عنوان وارد نشده'); return; }
+        const obj = { id, title, link, description: desc };
+        saveProjectObj(obj);
+        // reset form
+        document.getElementById('projId').value = '';
+        document.getElementById('projTitle').value = '';
+        document.getElementById('projLink').value = '';
+        document.getElementById('projDesc').value = '';
+        log('✅ Project saved', obj);
+      } catch (err) {
+        log('❌ save project error', err);
+      }
+    });
+
+    document.getElementById('projCancel').addEventListener('click', function(){
+      document.getElementById('projId').value = '';
+      document.getElementById('projTitle').value = '';
+      document.getElementById('projLink').value = '';
+      document.getElementById('projDesc').value = '';
+    });
+
+    window.editProject = function(id) {
+      try {
+        const projects = safeGet('projects', []);
+        const p = projects.find(x => x.id === id);
+        if (!p) return alert('پروژه پیدا نشد');
+        document.getElementById('projId').value = p.id;
+        document.getElementById('projTitle').value = p.title;
+        document.getElementById('projLink').value = p.link || '';
+        document.getElementById('projDesc').value = p.description || '';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (e) { log('❌ editProject error', e); }
+    };
+
+    window.deleteProject = function(id) {
+      if (!confirm('آیا مطمئن هستید حذف می‌کنید؟')) return;
+      try {
+        let projects = safeGet('projects', []);
+        projects = projects.filter(p => p.id !== id);
+        safeSet('projects', projects);
+        renderProjects();
+        log('🗑️ project deleted', id);
+      } catch (e) { log('❌ deleteProject error', e); }
+    };
+
+    // ---------- Skills ----------
+    function renderSkills() {
+      const el = document.getElementById('skillsList');
+      const skills = safeGet('skills', []);
+      if (!skills.length) { el.innerHTML = '<div class="small muted">بدون مهارت</div>'; return; }
+      el.innerHTML = skills.map((s, i) => {
+        return <div class="list-item"><div>${escapeHtml(s)}</div><div style="min-width:80px"><button onclick="removeSkill(${i})" class="small" style="color:#ff7b7b">حذف</button></div></div>;
+      }).join('');
+    }
+
+    document.getElementById('skillForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      try {
+        const v = document.getElementById('skillInput').value.trim();
+        if (!v) return;
+        const skills = safeGet('skills', []);
+        skills.unshift(v);
+        safeSet('skills', skills);
+        document.getElementById('skillInput').value = '';
+        renderSkills();
+      } catch (e) { log('❌ skill add error', e); }
+    });
+
+    window.removeSkill = function(idx) {
+      try {
+        let skills = safeGet('skills', []);
+        if (idx < 0 || idx >= skills.length) return;
+        skills.splice(idx, 1);
+        safeSet('skills', skills);
+        renderSkills();
+      } catch (e) { log('❌ removeSkill error', e); }
+    };
+
+    // ---------- Contact ----------
+    function renderContact() {
+      const c = safeGet('contact', { email:'', phone:'' });
+      const area = document.getElementById('contactArea');
+      if ((!c.email && !c.phone)) area.innerHTML = '<div class="small muted">اطلاعات تماس ثبت نشده</div>';
+      else area.innerHTML = <div class="small">ایمیل: ${escapeHtml(c.email || '-')}</div><div class="small">تلفن: ${escapeHtml(c.phone || '-')}</div>;
+      document.getElementById('contactEmail').value = c.email || '';
+      document.getElementById('contactPhone').value = c.phone || '';
+    }
+
+    document.getElementById('contactForm').addEventListener('submit', function(e){e.preventDefault();
+      try {
+        const email = document.getElementById('contactEmail').value.trim();
+        const phone = document.getElementById('contactPhone').value.trim();
+        safeSet('contact', { email, phone });
+        renderContact();
+        log('✅ contact saved');
+      } catch (e) { log('❌ contact save error', e); }
+    });
+
+    // ---------- utilities ----------
+    function escapeHtml(unsafe) {
+      if (!unsafe && unsafe !== 0) return '';
+      return String(unsafe)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+    function escapeAttr(s) { return escapeHtml(s); }
+
+    // ---------- init ----------
+    document.addEventListener('DOMContentLoaded', function(){
+      try {
+        log('DOMContentLoaded -> rendering UI');
+        // دوباره auth رو چک کن (در صورت فراخوانی مستقیم)
+        if (!checkAuth()) return;
+        renderProjects();
+        renderSkills();
+        renderContact();
+      } catch (e) {
+        log('❌ init error', e);
+      }
+    });
+  </script>
+</body>
+</html>
